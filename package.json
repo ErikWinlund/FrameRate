@@ -5,7 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "cd backend && nodemon src/server.ts",
+    "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev"
   },
   "keywords": [],
@@ -13,6 +13,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "concurrently": "^9.2.1"
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
+    "concurrently": "^9.2.1",
+    "morgan": "^1.10.1"
   }
 }
