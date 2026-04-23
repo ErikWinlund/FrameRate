@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import JWTModel from "../models/JWT";
 
 import userModel from "../models/userModel";
 import bcrypt from "bcrypt";
@@ -7,6 +8,8 @@ class UserController {
   async registerUser(req: Request, res: Response) {
     try {
       const { username, email, password, favoriteGenre } = req.body;
+
+      console.log(req.body);
 
       if (
         await userModel.findOne({
@@ -34,6 +37,7 @@ class UserController {
         message: "User created",
       });
     } catch (error) {
+      console.log(error);
       return res.status(400).json(error);
     }
   }
@@ -53,6 +57,14 @@ class UserController {
         const userObj = user.toObject();
         //@ts-ignore
         delete userObj.password;
+        const token = JWTModel.createJwtToken(user._id, user.username, email);
+        const expiry = new Date(Date.now() + 1000 * 60 * 60);
+        res.cookie("token", token, {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          expires: expiry,
+        });
         return res.status(200).json({ user: userObj });
       }
 
@@ -60,6 +72,7 @@ class UserController {
         message: "Incorrect password",
       });
     } catch (error) {
+      console.log(error);
       return res.status(400).json(error);
     }
   }

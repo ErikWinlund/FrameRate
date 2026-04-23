@@ -1,1 +1,8 @@
 @import "tailwindcss";
+html {
+  overflow-x: hidden;
+}
+
+@theme {
+  --font-sans: "Be Vietnam Pro", sans-serif;
+}
