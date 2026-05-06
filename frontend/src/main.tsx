@@ -5,12 +5,13 @@ import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./LoginPage.tsx";
 import SignupPage from "./signupPage.tsx";
+import StartPage from "./startPage.tsx";
 
 const router = createBrowserRouter([
   {
     children: [
       {
-        path: "/",
+        path: "/app",
         element: <App />,
       },
       {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <SignupPage />,
+      },
+      {
+        path: "/",
+        element: <StartPage />,
       },
     ],
   },
