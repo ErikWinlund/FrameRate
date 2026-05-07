@@ -41,8 +41,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-//API call
-
+//Trending movies
 app.get("/api/movies/popular", async (req, res) => {
   try {
     const response = await axios.get(
@@ -50,6 +49,31 @@ app.get("/api/movies/popular", async (req, res) => {
       {
         params: {
           api_key: API_KEY,
+        },
+      },
+    );
+
+    res.json(response.data);
+  } catch (err: any) {
+    console.log("ERROR:", err.response?.data || err.message);
+
+    res.status(500).json({
+      error: err.response?.data || err.message,
+    });
+  }
+});
+
+// All movies
+app.get("/api/movies", async (req, res) => {
+  const page = req.query.page || 1;
+
+  try {
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/discover/movie",
+      {
+        params: {
+          api_key: API_KEY,
+          page,
         },
       },
     );

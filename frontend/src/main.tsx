@@ -7,6 +7,7 @@ import LoginPage from "./LoginPage.tsx";
 import SignupPage from "./signupPage.tsx";
 import StartPage from "./startPage.tsx";
 import { AuthProvider } from "../context/useAuth.tsx";
+import MoviePage from "./moviePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <StartPage />,
+      },
+      {
+        path: "/movies",
+        element: <MoviePage />,
       },
     ],
   },
