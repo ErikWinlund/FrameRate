@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes";
 import morgan from "morgan";
 import axios from "axios";
-import { connect } from "node:http2";
 
 dotenv.config();
 
@@ -44,14 +43,16 @@ app.listen(PORT, () => {
 
 //API call
 
-app.get("/api/movies", async (req, res) => {
+app.get("/api/movies/popular", async (req, res) => {
   try {
-    const response = await axios.get("https://www.omdbapi.com/", {
-      params: {
-        apikey: API_KEY,
-        s: req.query.q,
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/movie/popular",
+      {
+        params: {
+          api_key: API_KEY,
+        },
       },
-    });
+    );
 
     res.json(response.data);
   } catch (err: any) {

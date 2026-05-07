@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 function LoginPage() {
+  const { login } = useAuth();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
-  const login = async (email: string, password: string) => {
+  const loginUser = async (email: string, password: string) => {
     const res = await fetch("http://localhost:5000/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -16,7 +19,9 @@ function LoginPage() {
 
     if (res.ok) {
       console.log("You made it");
-      navigate("/home");
+      const data = await res.json();
+      login(data.user);
+      navigate("/");
     }
   };
 
@@ -125,7 +130,7 @@ function LoginPage() {
 
           <button
             className="mt-8 w-full bg-[#E11D48] text-white font-semibold py-4 rounded-lg hover:bg-[#be123c] transition tracking-widest text-sm cursor-pointer"
-            onClick={() => login(email, password)}
+            onClick={() => loginUser(email, password)}
           >
             Login to Libary
           </button>
