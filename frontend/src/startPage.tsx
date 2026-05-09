@@ -1,6 +1,7 @@
 import Navbar from "./NavBar";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/useAuth";
+import { Link } from "react-router-dom";
 
 type Movie = {
   id: number;
@@ -51,9 +52,12 @@ function StartPage() {
           </div>
 
           <div className="w-300 h-20 flex  margin mt-5">
-            <button className=" mt-5 w-30 h-fit bg-[#1C2B3C] text-white font-semibold py-4 rounded-lg hover:bg-[#be123c] transition tracking-widest text-sm cursor-pointer">
+            <Link
+              to="/movies"
+              className=" text-center mt-5 w-30 h-fit bg-[#1C2B3C] text-white font-semibold py-4 rounded-lg hover:bg-[#be123c] transition tracking-widest text-sm cursor-pointer"
+            >
               All Movies
-            </button>
+            </Link>
             {user && (
               <>
                 <button className=" mt-5 ml-5 w-30 h-fit bg-[#1C2B3C] text-white font-semibold py-4 rounded-lg hover:bg-[#be123c] transition tracking-widest text-sm cursor-pointer">

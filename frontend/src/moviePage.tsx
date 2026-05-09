@@ -1,6 +1,7 @@
 import Navbar from "./NavBar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useEffectEvent } from "react";
 import { useAuth } from "../context/useAuth";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 type Movie = {
   id: number;
@@ -11,8 +12,20 @@ type Movie = {
 function MoviePage() {
   const { user } = useAuth();
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(5);
+  const [searchedMovies, setSearchMovies] = useState<Movie[]>([]);
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [page, setPage] = useState(Number(searchParams.get("page") || 1));
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setPage(Number(searchParams.get("page") || 1));
+  }, [searchParams]);
+
+  useEffect(() => {
+    navigate("/movies?page=1&search=" + search);
+    searchForMovie();
+  }, [search]);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -26,13 +39,30 @@ function MoviePage() {
         console.log(err);
       }
     };
-
-    fetchMovies();
-  }, []);
-
+    if (search.length > 0) {
+      searchForMovie();
+    } else {
+      fetchMovies();
+    }
+  }, [page]);
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().startsWith(search.toLowerCase()),
   );
+
+  const searchForMovie = async () => {
+    const fetchMovies = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/api/movies/search?page=${page}&searchWord=${search}`,
+        );
+        const data = await res.json();
+        setSearchMovies(data.results as Movie[]);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchMovies();
+  };
 
   return (
     <div>
@@ -71,26 +101,57 @@ function MoviePage() {
               type="'text'"
               placeholder="Search movies..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  navigate("/movies?page=1&search=" + search);
+                  searchForMovie();
+                }
+              }}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
               className="mt-5 ml-155 w-70 p-4 rounded-lg bg-[#1C2B3C] text-white outline-none"
             />
           </div>
 
           <section className="grid grid-cols-3 gap-10 mt-4 mb-20">
-            {filteredMovies.map((movie) => (
-              <div
-                key={movie.id}
-                className="w-90 h-90 bg-[#122131] text-[#D4E4FA] p-2"
-              >
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="w-full h-70 object-cover rounded"
-                />
+            {(search.length > 0 ? searchedMovies : filteredMovies).map(
+              (movie) => (
+                <div
+                  key={movie.id}
+                  className="w-90 h-90 bg-[#122131] text-[#D4E4FA] p-2"
+                >
+                  <img
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    alt={movie.title}
+                    className="w-full h-70 object-cover rounded"
+                  />
 
-                <p className="mt-2 text-sm font-semibold">{movie.title}</p>
-              </div>
-            ))}
+                  <p className="mt-2 text-sm font-semibold">{movie.title}</p>
+                </div>
+              ),
+            )}
+
+            <div className="flex justify-between m-10 ">
+              {page !== 1 && (
+                <button
+                  className="text-white"
+                  onClick={() =>
+                    navigate("/movies?page=" + (page - 1) + "&search=" + search)
+                  }
+                >
+                  ← Previous
+                </button>
+              )}
+              <button
+                className="text-white"
+                onClick={() =>
+                  navigate("/movies?page=" + (page + 1) + "&search=" + search)
+                }
+              >
+                Next →
+              </button>
+            </div>
           </section>
         </main>
       </div>

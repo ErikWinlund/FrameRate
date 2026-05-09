@@ -87,3 +87,28 @@ app.get("/api/movies", async (req, res) => {
     });
   }
 });
+
+app.get("/api/movies/search", async (req, res) => {
+  const page = req.query.page || 1;
+  const searchWord = req.query.searchWord;
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?query=${searchWord}&include_adult=true&language=en-US`,
+      {
+        params: {
+          api_key: API_KEY,
+          page,
+        },
+      },
+    );
+
+    res.json(response.data);
+  } catch (err: any) {
+    console.log("ERROR:", err.response?.data || err.message);
+
+    res.status(500).json({
+      error: err.response?.data || err.message,
+    });
+  }
+});
