@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import JWTModel from "../models/JWT";
 
 import userModel from "../models/userModel";
@@ -74,6 +74,29 @@ class UserController {
     } catch (error) {
       console.log(error);
       return res.status(400).json(error);
+    }
+  }
+
+  async getProfile(req: Request, res: Response) {
+    try {
+      //@ts-ignore
+      const jwt = res.locals.jwt;
+
+      const user = await userModel.findById(jwt.userId).select("-password");
+
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      return res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+
+      return res.status(500).json({
+        message: "Server error",
+      });
     }
   }
 }

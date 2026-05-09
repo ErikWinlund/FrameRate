@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import userRoutes from "./routes/userRoutes";
 import morgan from "morgan";
 import axios from "axios";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const API_KEY = process.env.API_KEY;
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -94,7 +96,7 @@ app.get("/api/movies/search", async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.themoviedb.org/3/search/movie?query=${searchWord}&include_adult=true&language=en-US`,
+      `https://api.themoviedb.org/3/search/movie?query=${searchWord}&include_adult=false&language=en-US`,
       {
         params: {
           api_key: API_KEY,
