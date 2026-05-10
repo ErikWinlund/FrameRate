@@ -120,6 +120,7 @@ function MoviePage() {
                 <div
                   key={movie.id}
                   className="w-90 h-90 bg-[#122131] text-[#D4E4FA] p-2"
+                  onClick={() => navigate(`/movies/${movie.id}`)}
                 >
                   <img
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}

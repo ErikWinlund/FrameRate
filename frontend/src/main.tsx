@@ -9,6 +9,7 @@ import StartPage from "./startPage.tsx";
 import { AuthProvider } from "../context/useAuth.tsx";
 import MoviePage from "./moviePage.tsx";
 import ProfilePage from "./profilePage.tsx";
+import MovieDetailsPage from "./movieDetailsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/movies/:id",
+        element: <MovieDetailsPage />,
       },
     ],
   },

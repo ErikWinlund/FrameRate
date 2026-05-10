@@ -2,6 +2,7 @@ import Navbar from "./NavBar";
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/useAuth";
 import { Link } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 type Movie = {
   id: number;
@@ -12,6 +13,7 @@ type Movie = {
 function StartPage() {
   const { user } = useAuth();
   const [movies, setMovies] = useState<Movie[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -80,7 +82,8 @@ function StartPage() {
             {movies.map((movie) => (
               <div
                 key={movie.id}
-                className="w-90 h-90 bg-[#122131] text-[#D4E4FA] p-2"
+                className="w-90 h-90 bg-[#122131] text-[#D4E4FA] p-2 cursor-pointer"
+                onClick={() => navigate(`/movies/${movie.id}`)}
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
