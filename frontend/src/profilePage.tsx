@@ -6,12 +6,32 @@ import { useAuth } from "../context/useAuth";
 function ProfilePage() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [reviews, setReviews] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
       navigate("/login");
     }
   }, []);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/reviews/me", {
+          credentials: "include",
+        });
+
+        const data = await res.json();
+        setReviews(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (user) {
+      fetchReviews();
+    }
+  }, [user]);
 
   return (
     <div>
@@ -61,9 +81,11 @@ function ProfilePage() {
                 </div>
 
                 <div className="bg-[#122131] p-8 rounded-xl">
-                  <h3 className="text-[#E5BDBE] text-lg">Reviews Written</h3>
+                  <h3 className="text-[#E5BDBE] text-lg">Reviews</h3>
 
-                  <p className="text-[#D4E4FA] text-5xl font-bold mt-4">0</p>
+                  <p className="text-[#D4E4FA] text-5xl font-bold mt-4">
+                    {reviews.length}
+                  </p>
                 </div>
 
                 <div className="bg-[#122131] p-8 rounded-xl">

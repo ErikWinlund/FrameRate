@@ -44,6 +44,24 @@ class ReviewController {
       });
     }
   }
+
+  async getUserReviews(req: Request, res: Response) {
+    try {
+      const jwt = res.locals.jwt;
+
+      const reviews = await reviewModel.find({
+        userId: jwt.userId,
+      });
+
+      return res.status(200).json(reviews);
+    } catch (error) {
+      console.log(error);
+
+      return res.status(500).json({
+        message: "Could not fetch user reviews",
+      });
+    }
+  }
 }
 
 export default new ReviewController();
