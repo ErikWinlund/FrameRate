@@ -79,7 +79,6 @@ class UserController {
 
   async getProfile(req: Request, res: Response) {
     try {
-      //@ts-ignore
       const jwt = res.locals.jwt;
 
       const user = await userModel.findById(jwt.userId).select("-password");

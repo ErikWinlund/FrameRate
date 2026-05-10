@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes";
 import morgan from "morgan";
 import axios from "axios";
 import cookieParser from "cookie-parser";
+import reviewRoutes from "./routes/reviewRoutes";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(
 );
 
 app.use("/users", userRoutes);
+app.use("/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "FrameRate API is running" });
@@ -111,6 +113,29 @@ app.get("/api/movies/search", async (req, res) => {
 
     res.status(500).json({
       error: err.response?.data || err.message,
+    });
+  }
+});
+
+//Endpoint för specifik film för reviews
+
+app.get("/api/movies/:id", async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${req.params.id}`,
+      {
+        params: {
+          api_key: API_KEY,
+        },
+      },
+    );
+
+    res.json(response.data);
+  } catch (err: any) {
+    console.log(err);
+
+    res.status(500).json({
+      error: err.message,
     });
   }
 });

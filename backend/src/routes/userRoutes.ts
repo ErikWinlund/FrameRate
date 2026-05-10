@@ -12,8 +12,4 @@ router.post("/login", (req, res) => {
   userController.loginUser(req, res);
 });
 
-router.get("/profile", jwtMiddleware.jwtTokenIsValid, (req, res) => {
-  userController.getProfile(req, res);
-});
-
 export default router;
